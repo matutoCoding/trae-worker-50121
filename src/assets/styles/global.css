@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: #F0F8FF;
+  color: #1f2937;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md;
+  }
+  
+  .card-header {
+    @apply flex items-center justify-between mb-4;
+  }
+  
+  .card-title {
+    @apply text-lg font-semibold text-gray-800;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-ocean-500 to-ocean-600 text-white px-4 py-2 rounded-lg font-medium transition-all hover:from-ocean-600 hover:to-ocean-700 hover:shadow-lg active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium transition-all hover:bg-gray-200 active:scale-95;
+  }
+  
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .status-normal {
+    @apply bg-green-100 text-green-700;
+  }
+  
+  .status-warning {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+  
+  .status-danger {
+    @apply bg-red-100 text-red-700;
+  }
+  
+  .status-idle {
+    @apply bg-gray-100 text-gray-600;
+  }
+  
+  .status-maintenance {
+    @apply bg-blue-100 text-blue-700;
+  }
+  
+  .status-damaged {
+    @apply bg-red-100 text-red-700;
+  }
+  
+  .data-table {
+    @apply w-full border-collapse;
+  }
+  
+  .data-table th {
+    @apply bg-gray-50 text-left px-4 py-3 text-sm font-semibold text-gray-600 border-b border-gray-200;
+  }
+  
+  .data-table td {
+    @apply px-4 py-3 text-sm text-gray-700 border-b border-gray-100;
+  }
+  
+  .data-table tr:hover td {
+    @apply bg-gray-50;
+  }
+  
+  .stat-card {
+    @apply bg-white rounded-xl p-5 border border-gray-100 shadow-sm transition-all hover:shadow-md hover:-translate-y-1;
+  }
+  
+  .stat-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center mb-3;
+  }
+  
+  .stat-value {
+    @apply text-2xl font-bold text-gray-800 mb-1;
+  }
+  
+  .stat-label {
+    @apply text-sm text-gray-500;
+  }
+  
+  .stat-trend {
+    @apply text-xs font-medium mt-2;
+  }
+}
+
+.ant-layout {
+  background: #F0F8FF !important;
+}
+
+.ant-layout-sider {
+  background: #0A2F52 !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+}
+
+.ant-menu-item {
+  color: #cbd5e1 !important;
+}
+
+.ant-menu-item:hover {
+  color: white !important;
+}
+
+.ant-menu-item-selected {
+  color: white !important;
+}
+
+.ant-table {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(90deg, #20B2AA 0%, #0E7490 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(14, 77, 122, 0.3) !important;
+}
+
+.ant-btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(14, 77, 122, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.ant-card {
+  border-radius: 12px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-card-hoverable:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+}
