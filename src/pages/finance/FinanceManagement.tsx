@@ -20,7 +20,7 @@ const INCOME_CATEGORIES = ['销售收入', '政府补贴', '其他收入'];
 const PIE_COLORS = ['#52C41A', '#1890FF', '#FAAD14', '#722ED1', '#13C2C2', '#F5222D', '#FA8C16', '#A0D911'];
 
 export default function FinanceManagement() {
-  const { financeRecords, getTotalIncome, getTotalExpense, currentUser } = useAppStore();
+  const { financeRecords, getTotalIncome, getTotalExpense, currentUser, addFinanceRecord } = useAppStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
@@ -76,9 +76,20 @@ export default function FinanceManagement() {
   }, [financeRecords]);
 
   const handleAddRecord = (values: any) => {
-    message.success('记录添加成功');
+    const newRecord: FinanceRecord = {
+      id: `finance-${Date.now()}`,
+      type: values.type,
+      relatedId: values.relatedId || '',
+      transactionDate: values.transactionDate.format('YYYY-MM-DD'),
+      amount: values.amount,
+      category: values.category,
+      description: values.description || '',
+      operator: currentUser.name,
+    };
+    addFinanceRecord(newRecord);
     setModalVisible(false);
     form.resetFields();
+    message.success('记录添加成功');
   };
 
   const statCards = [

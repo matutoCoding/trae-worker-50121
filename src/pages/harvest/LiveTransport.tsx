@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Truck, Thermometer, Droplets, MapPin, Clock, CheckCircle, AlertTriangle, Plus, Package, ArrowLeft, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { message } from 'antd';
 import { useAppStore } from '@/store';
 import type { Transport, TransportStatus } from '@/types';
 
@@ -19,7 +20,7 @@ const statusMap: Record<TransportStatus, { text: string; color: string }> = {
 };
 
 export default function LiveTransport() {
-  const { transports, harvests, getCageById } = useAppStore();
+  const { transports, harvests, getCageById, addTransport } = useAppStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -90,7 +91,24 @@ export default function LiveTransport() {
   ];
 
   const handleSubmit = () => {
-    form.validateFields().then(() => setIsModalOpen(false));
+    form.validateFields().then((values) => {
+      const newTransport: Transport = {
+        id: `transport-${Date.now()}`,
+        harvestId: values.harvestId,
+        departureDate: dayjs().format('YYYY-MM-DD HH:mm'),
+        destination: values.destination,
+        vehicle: values.vehicle,
+        driver: values.driver,
+        temperature: values.temperature,
+        oxygenLevel: 95,
+        cargoWeight: 0,
+        route: '',
+        status: 'pending' as TransportStatus,
+      };
+      addTransport(newTransport);
+      setIsModalOpen(false);
+      message.success('运输记录添加成功');
+    });
   };
 
   const cardHeaderStyle = { padding: '16px 20px', borderBottom: '1px solid #f0f0f0' };

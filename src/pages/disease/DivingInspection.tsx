@@ -15,7 +15,7 @@ const statusMap: Record<string, { text: string; color: string }> = {
 };
 
 export default function DivingInspection() {
-  const { inspections, cages, currentUser } = useAppStore();
+  const { inspections, cages, currentUser, addInspection } = useAppStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -60,7 +60,7 @@ export default function DivingInspection() {
       message.success('巡查记录已保存');
       setModalVisible(false);
       form.resetFields();
-      console.log('New diving inspection:', newRecord);
+      addInspection(newRecord);
     });
   };
 

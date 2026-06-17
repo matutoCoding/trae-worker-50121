@@ -4,6 +4,7 @@ import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 import { Fish, ShoppingCart, TrendingUp, Package, DollarSign, Plus, Truck, Calendar, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { message } from 'antd';
 import { useAppStore } from '@/store';
 import type { Harvest } from '@/types';
 
@@ -16,7 +17,7 @@ const qualityGradeMap = { A: { color: 'success', text: 'A级' }, B: { color: 'pr
 const PIE_COLORS = ['#52C41A', '#1890FF', '#FA8C16'];
 
 export default function HarvestManagement() {
-  const { harvests, cages, fryReleases, getCageById, getFryReleaseByCage } = useAppStore();
+  const { harvests, cages, fryReleases, getCageById, getFryReleaseByCage, addHarvest } = useAppStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -108,7 +109,25 @@ export default function HarvestManagement() {
   ];
 
   const handleSubmit = () => {
-    form.validateFields().then(() => setIsModalOpen(false));
+    form.validateFields().then((values) => {
+      const fryRelease = getFryReleaseByCage(values.cageId);
+      const newHarvest: Harvest = {
+        id: `harvest-${Date.now()}`,
+        cageId: values.cageId,
+        fryReleaseId: fryRelease?.id || '',
+        harvestDate: values.harvestDate,
+        quantity: values.quantity,
+        weight: values.weight,
+        qualityGrade: values.qualityGrade,
+        buyer: values.buyer,
+        unitPrice: values.unitPrice,
+        totalAmount: values.weight * values.unitPrice,
+        inspector: values.inspector,
+      };
+      addHarvest(newHarvest);
+      setIsModalOpen(false);
+      message.success('收获记录添加成功');
+    });
   };
 
   const cardHeaderStyle = { padding: '16px 20px', borderBottom: '1px solid #f0f0f0' };

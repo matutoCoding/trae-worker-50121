@@ -20,24 +20,23 @@ const feedTypes = ['配合饲料', '高蛋白饲料', '专用配合饲料', '鲜
 const timeOptions = ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'];
 
 export default function FeedingSchedulePage() {
-  const { feedingSchedules, cages, getCageById } = useAppStore();
+  const { feedingSchedules, cages, getCageById, addFeedingSchedule, updateFeedingSchedule } = useAppStore();
   const [cageFilter, setCageFilter] = useState<string>('all');
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
-  const [schedules, setSchedules] = useState<FeedingSchedule[]>(feedingSchedules);
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
 
   const filteredSchedules = useMemo(() => {
-    let result = [...schedules];
+    let result = [...feedingSchedules];
     if (cageFilter !== 'all') {
       result = result.filter(s => s.cageId === cageFilter);
     }
     return result.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
-  }, [schedules, cageFilter]);
+  }, [feedingSchedules, cageFilter]);
 
   const dateCellRender = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
-    const daySchedules = schedules.filter(s => {
+    const daySchedules = feedingSchedules.filter(s => {
       const start = dayjs(s.startDate);
       const end = dayjs(s.endDate);
       return value.isAfter(start.subtract(1, 'day')) && value.isBefore(end.add(1, 'day')) && s.status !== 'completed';
@@ -64,7 +63,7 @@ export default function FeedingSchedulePage() {
 
   const dateFullCellRender = (value: Dayjs) => {
     const dateStr = value.format('YYYY-MM-DD');
-    const daySchedules = schedules.filter(s => {
+    const daySchedules = feedingSchedules.filter(s => {
       const start = dayjs(s.startDate);
       const end = dayjs(s.endDate);
       return value.isAfter(start.subtract(1, 'day')) && value.isBefore(end.add(1, 'day')) && s.status !== 'completed';
@@ -90,14 +89,11 @@ export default function FeedingSchedulePage() {
   };
 
   const handleToggleStatus = (id: string) => {
-    setSchedules(prev => prev.map(s => {
-      if (s.id === id) {
-        const newStatus = s.status === 'active' ? 'paused' : 'active';
-        message.success(`投喂计划已${newStatus === 'active' ? '启用' : '暂停'}`);
-        return { ...s, status: newStatus };
-      }
-      return s;
-    }));
+    const schedule = feedingSchedules.find(s => s.id === id);
+    if (!schedule) return;
+    const newStatus = schedule.status === 'active' ? 'paused' : 'active';
+    updateFeedingSchedule(id, { status: newStatus });
+    message.success(`投喂计划已${newStatus === 'active' ? '启用' : '暂停'}`);
   };
 
   const handleAddSchedule = () => {
@@ -113,7 +109,7 @@ export default function FeedingSchedulePage() {
         endDate: endDate.format('YYYY-MM-DD'),
         status: 'active',
       };
-      setSchedules(prev => [...prev, newSchedule]);
+      addFeedingSchedule(newSchedule);
       message.success('投喂计划创建成功');
       setModalVisible(false);
       form.resetFields();

@@ -40,7 +40,7 @@ const statusMap: Record<string, { text: string; color: string }> = {
 };
 
 export default function DiseaseDiagnosis() {
-  const { diseaseRecords, cages, currentUser } = useAppStore();
+  const { diseaseRecords, cages, currentUser, addDiseaseRecord } = useAppStore();
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -78,7 +78,7 @@ export default function DiseaseDiagnosis() {
       setSaveModalVisible(false);
       form.resetFields();
       setSelectedSymptoms([]);
-      console.log('New disease record:', newRecord);
+      addDiseaseRecord(newRecord);
     });
   };
 

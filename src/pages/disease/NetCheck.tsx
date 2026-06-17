@@ -33,7 +33,7 @@ const formOptions = {
 };
 
 export default function NetCheck() {
-  const { inspections, cages, currentUser } = useAppStore();
+  const { inspections, cages, currentUser, addInspection } = useAppStore();
   const [selectedCage, setSelectedCage] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
@@ -86,7 +86,7 @@ export default function NetCheck() {
       };
       message.success('检查记录已保存');
       setModalVisible(false); form.resetFields(); setSelectedCage(null);
-      console.log('New net check record:', newRecord);
+      addInspection(newRecord);
     });
   };
 

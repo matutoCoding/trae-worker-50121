@@ -7,7 +7,7 @@ import type { FryRelease } from '@/types';
 import dayjs from 'dayjs';
 
 const FryReleaseList = () => {
-  const { fryReleases, cages, getCageById } = useAppStore();
+  const { fryReleases, cages, getCageById, addFryRelease, updateFryRelease, deleteFryRelease } = useAppStore();
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState('');
   const [speciesFilter, setSpeciesFilter] = useState<string>();
@@ -97,7 +97,15 @@ const FryReleaseList = () => {
         releaseDate: values.releaseDate.format('YYYY-MM-DD'),
         expectedHarvestDate: values.expectedHarvestDate?.format('YYYY-MM-DD'),
       };
-      message.success(editingRecord ? `批次 ${editingRecord.batchNo} 已更新` : '投放登记已创建');
+      if (editingRecord) {
+        updateFryRelease(editingRecord.id, payload);
+        message.success(`批次 ${editingRecord.batchNo} 已更新`);
+      } else {
+        const id = `fry-${Date.now()}`;
+        const batchNo = `BN${Date.now().toString().slice(-6)}`;
+        addFryRelease({ ...payload, id, batchNo });
+        message.success('投放登记已创建');
+      }
       setModalVisible(false);
     } catch (error) {
       console.error('Validation failed:', error);
@@ -105,9 +113,10 @@ const FryReleaseList = () => {
   };
 
   const confirmDelete = () => {
-    message.success(`批次 ${deletingRecord?.batchNo} 已删除`);
+    deleteFryRelease(deletingRecord!.id);
     setDeleteModalVisible(false);
     setDeletingRecord(null);
+    message.success(`批次 ${deletingRecord?.batchNo} 已删除`);
   };
 
   const statCards = [
